@@ -28,12 +28,6 @@ jobs:
           with:
             name: dragon-text-file
             path: dragon.txt
-
-        - name: List all files
-          run: ls -ltra
-
-        - name: Output contents
-          run: cat  dragon.txt
        
         - name: Test file Exists
           run: grep -i "dragon" dragon.txt
