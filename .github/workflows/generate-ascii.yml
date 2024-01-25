@@ -29,11 +29,11 @@ jobs:
             name: dragon-text-file
             path: dragon.txt
 
-        - name: Test file Exists
+        - name: List all files
           run: ls -ltra
        
         - name: Test file Exists
-          run: grep -i "dragon" dragon.txt
+          run: grep -i "Dragon" dragon.txt
         
         
     
@@ -41,6 +41,12 @@ jobs:
         needs: [test_job_2]
         runs-on: ubuntu-lates
         steps:
+        - name: Download Dragon text file
+          uses: actions/download-artifact@v4
+          with:
+            name: dragon-text-file
+            path: dragon.txt
+        
         - name: Read file
           run: cat dragon.txt
     
