@@ -39,7 +39,7 @@ jobs:
     
     deploy_job_3:
         needs: [test_job_2]
-        runs-on: ubuntu-lates
+        runs-on: ubuntu-latest
         steps:
         - name: Download Dragon text file
           uses: actions/download-artifact@v4
