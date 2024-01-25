@@ -16,7 +16,7 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: dragon-text-file
-            path: dragon.txt
+            path: path/dragon.txt
     
 
     test_job_2:
@@ -27,13 +27,13 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: dragon-text-file
-            path: dragon.txt
+            path: path/dragon.txt
 
         - name: List all files
           run: ls -ltra
        
         - name: Test file Exists
-          run: grep -i "dragon" dragon.txt
+          run: grep -i "dragon" path/dragon.txt
         
         
     
