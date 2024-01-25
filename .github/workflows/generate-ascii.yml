@@ -28,7 +28,10 @@ jobs:
           with:
             name: dragon-text-file
             path: dragon.txt
-        
+
+        - name: Test file Exists
+          run: ls -ltra
+       
         - name: Test file Exists
           run: grep -i "dragon" dragon.txt
         
