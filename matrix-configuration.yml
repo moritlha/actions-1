@@ -1,6 +1,9 @@
 name: Matrix configuration
 
-on: push
+on: 
+  push:
+  workflow-dispatch: 
+    
 
 ###################################################################
 #######   Matrix configuration using Github actions ###############
