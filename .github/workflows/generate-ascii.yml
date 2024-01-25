@@ -27,13 +27,16 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: dragon-text-file
-            path: path/dragon.txt
+            path: dragon.txt
 
         - name: List all files
           run: ls -ltra
+
+        - name: Output contents
+          run: cat  dragon.txt
        
         - name: Test file Exists
-          run: grep -i "dragon" path/dragon.txt
+          run: grep -i "dragon" dragon.txt
         
         
     
