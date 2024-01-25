@@ -6,6 +6,9 @@ jobs:
     first_job:
         runs-on: ubuntu-latest
         steps:
+        - name: Checkout repo
+          uses: actions/checkout@4
+
         - name: Welcome messages
           run: echo "My frist Github Actions job"
         
@@ -13,5 +16,5 @@ jobs:
           run: ls
         
         - name: Read file
-          run: cat ../README.md
+          run: cat README.md
     
