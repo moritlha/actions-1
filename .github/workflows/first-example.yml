@@ -1,6 +1,7 @@
 name: My First Workflow
 
-on: push
+on: 
+    push
 
 jobs: 
     first_job:
@@ -9,12 +10,19 @@ jobs:
         - name: Checkout repo
           uses: actions/checkout@v4
 
-        - name: List and Read file
-          run: |
-            echo "My frist Github Actions job"
-            ls -ltra
-            cat README.md
+        - name: Install Cowsay Program
+          run: sudo apt-get install cowsay -y
         
-        - name: Generate ASCII Artwork
+        - name: Execute Cowsay CMD
           run: cowsay -f dragon "Run for cover, I am a dragon... RAWR" >> dragon.txt
+
+        - name: Test File Exists
+          run: grep -i "dragon" dragon.txt
+
+        - name: Read File
+          run: cat dragon.txt
+        
+        - name: List Repo Files
+          run: ls -ltra
+        
     
