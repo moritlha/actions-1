@@ -1,0 +1,174 @@
+name: Exploring Expressions
+
+on: workflow_dispatch
+
+
+###################################################################
+####################   Expressions example ########################
+###################################################################
+##############  Only run deploy job if in main branch #############
+###################################################################
+
+jobs: 
+    docker:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Docker Build
+          run: echo docker build -t ${{ vars.CONTAINER_REGISTRY}}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+        
+        - name: Docker Login
+          run: echo docker login --username=${{ vars.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+        
+        - name: Docker Publish
+          run: echo docker push ${{ vars.CONTAINER_REGISTRY}}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+    
+
+    deploy:
+        if: github.ref == 'refs/heads/main' # This job only runs if its part of main branch
+        needs: docker
+        concurrency:
+            group: production-deployment
+            cancel-in-progress: true
+        runs-on: ubuntu-latest
+        steps:
+        - name: Docker Run
+          timeout-minutes: 1
+          run: |
+            echo docker run -d -p 8080:80 docker.io/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+            sleep 1000
+    
+###################################################################
+####################   Concurrency example  #######################
+###################################################################
+##############  These Demos the conncurrency example ##############
+###################################################################
+
+# jobs: 
+#     docker:
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Build
+#           run: echo docker build -t ${{ vars.CONTAINER_REGISTRY}}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+        
+#         - name: Docker Login
+#           run: echo docker login --username=${{ vars.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+        
+#         - name: Docker Publish
+#           run: echo docker push ${{ vars.CONTAINER_REGISTRY}}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+    
+
+#     deploy:
+#         needs: docker
+#         concurrency:
+#             group: production-deployment
+#             cancel-in-progress: true
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Run
+#           run: |
+#             echo docker run -d -p 8080:80 docker.io/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+#             sleep 100
+
+###################################################################
+##################   Workflow level variables  ####################
+###################################################################
+##These variables are accessible to all the jobs in the workflow ##
+###################################################################
+
+# jobs: 
+#     docker:
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Build
+#           run: echo docker build -t ${{ vars.CONTAINER_REGISTRY}}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+        
+#         - name: Docker Login
+#           run: echo docker login --username=${{ vars.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+        
+#         - name: Docker Publish
+#           run: echo docker push ${{ vars.CONTAINER_REGISTRY}}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+    
+
+#     deploy:
+#         needs: docker
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Run
+#           run: echo docker run -d -p 8080:80 docker.io/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+
+# ###################################################################
+# ##################   Job level comments     #######################
+# ###################################################################
+
+# jobs: 
+#     docker:
+#         env:
+#             {{ vars.CONTAINER_REGISTRY}}: docker.io
+#             DOCKER_USERNAME: moritlha
+#             {{ vars.IMAGE_NAME}}: github-actions-nginx
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Build
+#           run: docker build -t ${{ vars.CONTAINER_REGISTRY}}/{{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+        
+#         - name: Docker Login
+#           env:
+#             DOCKER_PASSWORD: s3curePaSsw0rd
+#           run: docker login --username={{ vars.DOCKER_USERNAME }} --password=$DOCKER_PASSWORD
+        
+#         - name: Docker Publish
+#           run: echo docker push ${{ vars.CONTAINER_REGISTRY}}/{{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+    
+
+#     deploy:
+#         env:
+#             {{ vars.CONTAINER_REGISTRY}}: docker.io
+#             DOCKER_USERNAME: moritlha
+#             {{ vars.IMAGE_NAME}}: github-actions-nginx
+#         needs: docker
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Run
+#           run: docker run -d -p 8080:80 docker.io/{{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+
+
+
+###################################################################
+##################   Step level comments     #######################
+###################################################################
+# jobs: 
+#     docker:
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Build
+#           env:
+#             {{ vars.CONTAINER_REGISTRY}}: docker.io
+#             DOCKER_USERNAME: moritlha
+#             {{ vars.IMAGE_NAME}}: github-actions-nginx
+#           run: docker build -t ${{ vars.CONTAINER_REGISTRY}}/{{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+        
+#         - name: Docker Login
+#           env:
+#             DOCKER_PASSWORD: s3cUrePassw0rd
+#             DOCKER_USERNAME: moritlha
+#             {{ vars.IMAGE_NAME}}: github-actions-nginx
+#           run: docker login --username={{ vars.DOCKER_USERNAME }} --password=$DOCKER_PASSWORD
+        
+#         - name: Docker Publish
+#           env:
+#             {{ vars.CONTAINER_REGISTRY}}: docker.io
+#             DOCKER_USERNAME: moritlha
+#             {{ vars.IMAGE_NAME}}: github-actions-nginx
+#           run: echo docker push ${{ vars.CONTAINER_REGISTRY}}/{{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
+    
+
+#     deploy:
+#         needs: docker
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Docker Run
+#           env:
+#             {{ vars.CONTAINER_REGISTRY}}: docker.io
+#             DOCKER_USERNAME: moritlha
+#             {{ vars.IMAGE_NAME}}: github-actions-nginx
+#           run: docker run -d -p 8080:80 docker.io/{{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
