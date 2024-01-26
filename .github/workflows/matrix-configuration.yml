@@ -4,18 +4,25 @@ on:
   push:
   workflow_dispatch:
     
-
 ###################################################################
 #######   Matrix configuration using Github actions ###############
-###################################################################
-###################################################################
+####  Using include & exclude to make sure we run on    ###########
+#################   approprate platform  ##########################
 
 jobs: 
     deploy:
       strategy:
+        fail-fast: false
+        max-parallel: 2
         matrix: 
           os: [ubuntu-latest, ubuntu-20.04, windows-latest]
           images: [hello-world, alpine]
+          exclude:
+            - images: apline
+              os: windows-latest
+          include:
+            - images: amd64/alpine
+              os: ubuntu-20.04
       runs-on: ${{ matrix.os }}
       steps:
       - name: Echo Docker Details
@@ -23,6 +30,26 @@ jobs:
         
       - name: Run Images on ${{ matrix.os }}
         run: docker run ${{ matrix.images }}
+    
+
+###################################################################
+#######   Matrix configuration using Github actions ###############
+###################################################################
+###################################################################
+
+# jobs: 
+#     deploy:
+#       strategy:
+#         matrix: 
+#           os: [ubuntu-latest, ubuntu-20.04, windows-latest]
+#           images: [hello-world, alpine]
+#       runs-on: ${{ matrix.os }}
+#       steps:
+#       - name: Echo Docker Details
+#         run: docker info
+        
+#       - name: Run Images on ${{ matrix.os }}
+#         run: docker run ${{ matrix.images }}
     
     
 
