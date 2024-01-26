@@ -35,7 +35,7 @@ jobs:
           timeout-minutes: 1
           run: |
             echo docker run -d -p 8080:80 docker.io/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME}}:latest
-            sleep 1000
+            sleep 60s
     
 ###################################################################
 ####################   Concurrency example  #######################
